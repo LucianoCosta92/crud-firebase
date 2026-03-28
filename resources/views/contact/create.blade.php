@@ -35,7 +35,7 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                            <button type="submit" class="btn btn-sm btn-success">Save</button>
                         </div>
                     </form>
                 </div>
