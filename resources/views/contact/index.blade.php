@@ -43,7 +43,7 @@
                                     <td>{{ $contact['phone'] ?? '' }}</td>
                                     <td>{{ $contact['email'] ?? '' }}</td>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                                        <a href="{{ route('contacts.edit', $id) }}" class="btn btn-sm btn-warning">Edit</a>
 
                                         <form action="#" method="POST" style="display: inline;">
                                             @csrf
