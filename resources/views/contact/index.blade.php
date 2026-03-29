@@ -18,8 +18,8 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h4>Contacts List
-                        <a href="{{ route('contacts.create') }}" class="btn btn-sm btn-primary">Add Contact</a>
+                    <h4>Contacts List - Total: {{ $total_contacts }}
+                        <a href="{{ route('contacts.create') }}" class="btn btn-sm btn-primary float-end">Add Contact</a>
                     </h4>
                 </div>
                 <div class="card-body">
@@ -45,10 +45,10 @@
                                     <td>
                                         <a href="{{ route('contacts.edit', $id) }}" class="btn btn-sm btn-warning">Edit</a>
 
-                                        <form action="#" method="POST" style="display: inline;">
+                                        <form action="{{ route('contacts.destroy', $id) }}" onsubmit="return confirm('Are you sure you want to delete this contact?')" method="POST" style="display: inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="btn btn-sm btn-danger">Delete</button>
+                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                                         </form>
                                     </td>
                                 </tr>

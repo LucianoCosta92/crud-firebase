@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Kreait\Firebase\Database;
 use Illuminate\Support\Str;
 
@@ -19,7 +20,8 @@ class ContactController extends Controller
     public function index()
     {
         $contacts = $this->database->getReference('contacts')->orderByChild('first_name')->getValue() ?? [];
-        return view('contact.index', compact('contacts'));
+        $total_contacts = $this->database->getReference('contacts')->getSnapshot()->numChildren();
+        return view('contact.index', compact('contacts', 'total_contacts'));
     }
 
     public function create()
@@ -48,6 +50,7 @@ class ContactController extends Controller
 
             return redirect()->route('contacts.index')->with('success', 'Contact added successfully');
         } catch (Exception $e) {
+            Log::error($e);
             return redirect()->route('contacts.index')->with('error', 'Contact not added!');
         }
     }
@@ -71,15 +74,29 @@ class ContactController extends Controller
             $this->database
                 ->getReference('contacts/' . $id)
                 ->update([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'phone' => $request->phone,
-                'email' => $request->email,
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'phone' => $request->phone,
+                    'email' => $request->email,
             ]);
 
             return redirect()->route('contacts.index')->with('success', 'Contact updated successfully');
         } catch (Exception $e) {
+            Log::error($e);
             return back()->with('error', 'Contact not updated!');
+        }
+    }
+
+    public function destroy($id) {
+        try{
+            $this->database
+                ->getReference('contacts/' . $id)
+                ->remove();
+
+            return redirect()->route('contacts.index')->with('success', 'Contact deleted successfully');
+        }catch(Exception $e){
+            Log::error($e);
+            return redirect()->route('contacts.index')->with('error', 'Contact not deleted!');
         }
     }
 }
