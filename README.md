@@ -1,6 +1,6 @@
 # 🚀 Laravel + Firebase + Redis (Docker)
 
-Aplicação desenvolvida com **Laravel**, integrada ao **Firebase Realtime Database** e utilizando **Redis** para cache, totalmente containerizada com Docker.
+Aplicação desenvolvida com **Laravel**, integrada ao **Firebase Realtime Database** e utilizando **Redis** para cache, totalmente containerizada com Docker. CRUD básico para cadastrar, editar e deletar contatos com os campos: first_name, last_name, phone e email.
 
 ---
 
@@ -29,8 +29,8 @@ Antes de começar, você precisa ter instalado:
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
+git clone https://github.com/LucianoCosta92/crud-firebase.git
+cd crud_firebase
 ```
 
 ---
@@ -91,7 +91,7 @@ docker exec -it laravel_app php artisan key:generate
 
 Abra no navegador:
 
-👉 http://localhost:8000
+👉 http://127.0.0.1:8000/contacts
 
 ---
 

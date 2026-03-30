@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Kreait\Firebase\Database;
 use Illuminate\Support\Str;
@@ -19,8 +20,12 @@ class ContactController extends Controller
 
     public function index()
     {
-        $contacts = $this->database->getReference('contacts')->orderByChild('first_name')->getValue() ?? [];
-        $total_contacts = $this->database->getReference('contacts')->getSnapshot()->numChildren();
+        $contacts = Cache::remember('contacts_all', 300, function(){
+            return $this->database->getReference('contacts')->orderByChild('first_name')->getValue() ?? [];
+        });
+        $total_contacts = Cache::remember('total_contacts', 300, function(){
+            return $this->database->getReference('contacts')->getSnapshot()->numChildren();
+        });
         return view('contact.index', compact('contacts', 'total_contacts'));
     }
 
@@ -47,6 +52,9 @@ class ContactController extends Controller
                 'phone' => $request->phone,
                 'email' => $request->email,
             ]);
+
+            Cache::forget('contacts_all');
+            Cache::forget('total_contacts');
 
             return redirect()->route('contacts.index')->with('success', 'Contact added successfully');
         } catch (Exception $e) {
@@ -80,6 +88,8 @@ class ContactController extends Controller
                     'email' => $request->email,
             ]);
 
+            Cache::forget('contacts_all');
+
             return redirect()->route('contacts.index')->with('success', 'Contact updated successfully');
         } catch (Exception $e) {
             Log::error($e);
@@ -92,6 +102,9 @@ class ContactController extends Controller
             $this->database
                 ->getReference('contacts/' . $id)
                 ->remove();
+
+            Cache::forget('contacts_all');
+            Cache::forget('total_contacts');
 
             return redirect()->route('contacts.index')->with('success', 'Contact deleted successfully');
         }catch(Exception $e){
